@@ -10,3 +10,5 @@ build/
 reports/
 data/*.json
 !data/.gitkeep
+
+report.html

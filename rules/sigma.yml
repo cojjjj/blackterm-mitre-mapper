@@ -1,0 +1,32 @@
+- id: SIGMA-52bfcf14-c09a-4f82-a9a9-61f6b05f7d65
+  name: Suspicious Encoded PowerShell
+  technique_id: T1059.001
+  technique_name: Suspicious Encoded PowerShell
+  tactics:
+  - execution
+  severity: high
+  confidence: 0.78
+  description: Detects PowerShell using encoded command arguments.
+  platforms:
+  - Windows
+  match:
+    all:
+    - field: process.name
+      operator: endswith
+      value: \powershell.exe
+      case_sensitive: false
+      weight: 1.0
+    - field: process.command_line
+      operator: regex
+      value: (?:\ \-enc\ |\ \-EncodedCommand\ )
+      case_sensitive: false
+      weight: 1.0
+    any: []
+    none: []
+  references:
+  - https://attack.mitre.org/techniques/T1059/001/
+  enabled: true
+  tags:
+  - sigma
+  - attack.execution
+  - attack.t1059.001

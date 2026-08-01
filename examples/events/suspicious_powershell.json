@@ -1,0 +1,19 @@
+{
+  "@timestamp": "2026-07-31T22:00:00Z",
+  "host": {
+    "name": "WS-104"
+  },
+  "user": {
+    "name": "tdeppa"
+  },
+  "process": {
+    "name": "powershell.exe",
+    "command_line": "powershell.exe -NoProfile -enc SQBFAFgAIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQAKQA=",
+    "parent": {
+      "name": "winword.exe"
+    }
+  },
+  "source": {
+    "ip": "10.0.0.25"
+  }
+}

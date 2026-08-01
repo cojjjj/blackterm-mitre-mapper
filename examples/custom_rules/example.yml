@@ -1,0 +1,25 @@
+id: CUSTOM-T1110
+name: Repeated Authentication Failures
+technique_id: T1110
+technique_name: Brute Force
+tactics:
+  - credential-access
+severity: high
+confidence: 0.84
+description: Maps an aggregated authentication event with many failures.
+platforms:
+  - Windows
+  - Linux
+match:
+  all:
+    - field: event.category
+      operator: equals
+      value: authentication
+    - field: event.outcome
+      operator: equals
+      value: failure
+    - field: authentication.failure_count
+      operator: greater_than
+      value: 5
+references:
+  - https://attack.mitre.org/techniques/T1110/

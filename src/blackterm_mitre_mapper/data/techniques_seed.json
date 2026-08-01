@@ -1,0 +1,281 @@
+[
+  {
+    "external_id": "T1003.001",
+    "name": "LSASS Memory",
+    "description": "Adversaries may attempt to access credential material stored in the process memory of the Local Security Authority Subsystem Service.",
+    "platforms": [
+      "Windows"
+    ],
+    "tactics": [
+      "credential-access"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1003/001/",
+    "is_subtechnique": true
+  },
+  {
+    "external_id": "T1016",
+    "name": "System Network Configuration Discovery",
+    "description": "Adversaries may look for details about the network configuration and settings of systems they access.",
+    "platforms": [
+      "Linux",
+      "macOS",
+      "Windows"
+    ],
+    "tactics": [
+      "discovery"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1016/",
+    "is_subtechnique": false
+  },
+  {
+    "external_id": "T1021.001",
+    "name": "Remote Desktop Protocol",
+    "description": "Adversaries may use RDP to log into a system using valid accounts.",
+    "platforms": [
+      "Windows"
+    ],
+    "tactics": [
+      "lateral-movement"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1021/001/",
+    "is_subtechnique": true
+  },
+  {
+    "external_id": "T1021.004",
+    "name": "SSH",
+    "description": "Adversaries may use SSH to move laterally within an environment.",
+    "platforms": [
+      "Linux",
+      "macOS"
+    ],
+    "tactics": [
+      "lateral-movement"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1021/004/",
+    "is_subtechnique": true
+  },
+  {
+    "external_id": "T1033",
+    "name": "System Owner/User Discovery",
+    "description": "Adversaries may attempt to identify the primary user or currently logged-in user.",
+    "platforms": [
+      "Linux",
+      "macOS",
+      "Windows"
+    ],
+    "tactics": [
+      "discovery"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1033/",
+    "is_subtechnique": false
+  },
+  {
+    "external_id": "T1047",
+    "name": "Windows Management Instrumentation",
+    "description": "Adversaries may abuse WMI to execute malicious commands and payloads.",
+    "platforms": [
+      "Windows"
+    ],
+    "tactics": [
+      "execution"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1047/",
+    "is_subtechnique": false
+  },
+  {
+    "external_id": "T1049",
+    "name": "System Network Connections Discovery",
+    "description": "Adversaries may attempt to obtain a listing of network connections to or from the compromised system.",
+    "platforms": [
+      "Linux",
+      "macOS",
+      "Windows"
+    ],
+    "tactics": [
+      "discovery"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1049/",
+    "is_subtechnique": false
+  },
+  {
+    "external_id": "T1053.005",
+    "name": "Scheduled Task/Job",
+    "description": "Adversaries may abuse Windows Task Scheduler to execute programs at system startup or on a scheduled basis.",
+    "platforms": [
+      "Windows"
+    ],
+    "tactics": [
+      "execution",
+      "persistence",
+      "privilege-escalation"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1053/005/",
+    "is_subtechnique": true
+  },
+  {
+    "external_id": "T1059.001",
+    "name": "PowerShell",
+    "description": "Adversaries may abuse PowerShell commands and scripts for execution.",
+    "platforms": [
+      "Windows"
+    ],
+    "tactics": [
+      "execution"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1059/001/",
+    "is_subtechnique": true
+  },
+  {
+    "external_id": "T1059.003",
+    "name": "Windows Command Shell",
+    "description": "Adversaries may abuse the Windows command shell for execution.",
+    "platforms": [
+      "Windows"
+    ],
+    "tactics": [
+      "execution"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1059/003/",
+    "is_subtechnique": true
+  },
+  {
+    "external_id": "T1059.004",
+    "name": "Unix Shell",
+    "description": "Adversaries may abuse Unix shell commands and scripts for execution.",
+    "platforms": [
+      "Linux",
+      "macOS"
+    ],
+    "tactics": [
+      "execution"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1059/004/",
+    "is_subtechnique": true
+  },
+  {
+    "external_id": "T1059.006",
+    "name": "Python",
+    "description": "Adversaries may abuse Python commands and scripts for execution.",
+    "platforms": [
+      "Linux",
+      "macOS",
+      "Windows"
+    ],
+    "tactics": [
+      "execution"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1059/006/",
+    "is_subtechnique": true
+  },
+  {
+    "external_id": "T1547.001",
+    "name": "Registry Run Keys / Startup Folder",
+    "description": "Adversaries may achieve persistence by adding programs to a startup folder or referencing them with registry run keys.",
+    "platforms": [
+      "Windows"
+    ],
+    "tactics": [
+      "persistence",
+      "privilege-escalation"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1547/001/",
+    "is_subtechnique": true
+  },
+  {
+    "external_id": "T1070.001",
+    "name": "Clear Windows Event Logs",
+    "description": "Adversaries may clear Windows event logs to hide activity.",
+    "platforms": [
+      "Windows"
+    ],
+    "tactics": [
+      "defense-evasion"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1070/001/",
+    "is_subtechnique": true
+  },
+  {
+    "external_id": "T1087.001",
+    "name": "Local Account",
+    "description": "Adversaries may attempt to get a listing of local system accounts.",
+    "platforms": [
+      "Linux",
+      "macOS",
+      "Windows"
+    ],
+    "tactics": [
+      "discovery"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1087/001/",
+    "is_subtechnique": true
+  },
+  {
+    "external_id": "T1105",
+    "name": "Ingress Tool Transfer",
+    "description": "Adversaries may transfer tools or other files from an external system into a compromised environment.",
+    "platforms": [
+      "Linux",
+      "macOS",
+      "Windows"
+    ],
+    "tactics": [
+      "command-and-control"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1105/",
+    "is_subtechnique": false
+  },
+  {
+    "external_id": "T1112",
+    "name": "Modify Registry",
+    "description": "Adversaries may interact with the Windows Registry to hide configuration information or establish persistence.",
+    "platforms": [
+      "Windows"
+    ],
+    "tactics": [
+      "defense-evasion"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1112/",
+    "is_subtechnique": false
+  },
+  {
+    "external_id": "T1218.005",
+    "name": "Mshta",
+    "description": "Adversaries may abuse mshta.exe to proxy execution of malicious files or scripts.",
+    "platforms": [
+      "Windows"
+    ],
+    "tactics": [
+      "defense-evasion"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1218/005/",
+    "is_subtechnique": true
+  },
+  {
+    "external_id": "T1218.011",
+    "name": "Rundll32",
+    "description": "Adversaries may abuse rundll32.exe to proxy execution of malicious code.",
+    "platforms": [
+      "Windows"
+    ],
+    "tactics": [
+      "defense-evasion"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1218/011/",
+    "is_subtechnique": true
+  },
+  {
+    "external_id": "T1562.001",
+    "name": "Impair Defenses",
+    "description": "Adversaries may maliciously modify components of a victim environment to hinder defensive mechanisms.",
+    "platforms": [
+      "Linux",
+      "macOS",
+      "Windows"
+    ],
+    "tactics": [
+      "defense-evasion"
+    ],
+    "url": "https://attack.mitre.org/techniques/T1562/001/",
+    "is_subtechnique": true
+  }
+]

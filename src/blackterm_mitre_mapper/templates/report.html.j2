@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }}</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080b10;
+      --panel: #10151d;
+      --panel-2: #151c27;
+      --text: #e8edf5;
+      --muted: #8e9bad;
+      --accent: #b778ff;
+      --cyan: #4de3ff;
+      --border: #273244;
+      --critical: #ff4d6d;
+      --high: #ff8a4c;
+      --medium: #ffd166;
+      --low: #4de3ff;
+      --info: #8e9bad;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top right, rgba(183,120,255,.12), transparent 35%),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+      line-height: 1.5;
+    }
+    main { max-width: 1180px; margin: 0 auto; padding: 42px 24px 80px; }
+    header { margin-bottom: 30px; }
+    .eyebrow { color: var(--accent); letter-spacing: .18em; font-weight: 700; font-size: .78rem; }
+    h1 { margin: 8px 0; font-size: clamp(2rem, 5vw, 4.1rem); }
+    .subtitle { color: var(--muted); max-width: 760px; }
+    .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 30px 0; }
+    .stat, .event, .mapping {
+      background: rgba(16, 21, 29, .92);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+    .stat { padding: 18px; }
+    .stat strong { display: block; font-size: 1.8rem; color: var(--cyan); }
+    .stat span { color: var(--muted); }
+    .event { padding: 22px; margin-top: 18px; }
+    .event-head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+    .risk { font-size: 1.8rem; font-weight: 800; }
+    .muted { color: var(--muted); }
+    .mapping { padding: 18px; margin-top: 14px; background: var(--panel-2); }
+    .mapping-head { display: flex; justify-content: space-between; gap: 12px; }
+    .technique-id { color: var(--cyan); font-family: ui-monospace, monospace; }
+    .badge { border-radius: 999px; padding: 4px 10px; font-size: .75rem; font-weight: 800; text-transform: uppercase; }
+    .critical { color: var(--critical); border: 1px solid var(--critical); }
+    .high { color: var(--high); border: 1px solid var(--high); }
+    .medium { color: var(--medium); border: 1px solid var(--medium); }
+    .low { color: var(--low); border: 1px solid var(--low); }
+    .informational { color: var(--info); border: 1px solid var(--info); }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      padding: 14px;
+      background: #090d13;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: auto;
+    }
+    ul { margin-bottom: 0; }
+    footer { color: var(--muted); margin-top: 34px; font-size: .85rem; }
+    @media (max-width: 720px) {
+      .stats { grid-template-columns: 1fr; }
+      .event-head, .mapping-head { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">BLACKTERM SECURITY RESEARCH</div>
+    <h1>MITRE MAPPER</h1>
+    <p class="subtitle">
+      ATT&amp;CK context generated from security telemetry using transparent,
+      reviewable mapping rules.
+    </p>
+  </header>
+
+  <section class="stats">
+    <div class="stat"><strong>{{ event_count }}</strong><span>Events analyzed</span></div>
+    <div class="stat"><strong>{{ mapping_count }}</strong><span>ATT&amp;CK mappings</span></div>
+    <div class="stat"><strong>{{ max_risk }}</strong><span>Highest risk score</span></div>
+  </section>
+
+  {% for result in results %}
+  <article class="event">
+    <div class="event-head">
+      <div>
+        <div class="eyebrow">EVENT {{ loop.index }}</div>
+        <h2>{{ result.event_id }}</h2>
+        <div class="muted">{{ result.source or "Unknown source" }}</div>
+      </div>
+      <div>
+        <div class="risk">{{ result.risk_score }}/100</div>
+        <span class="badge {{ result.highest_severity }}">{{ result.highest_severity }}</span>
+      </div>
+    </div>
+
+    <details>
+      <summary>Raw event</summary>
+      <pre>{{ result.event | tojson(indent=2) }}</pre>
+    </details>
+
+    {% if result.mappings %}
+      {% for mapping in result.mappings %}
+      <section class="mapping">
+        <div class="mapping-head">
+          <div>
+            <div class="technique-id">{{ mapping.technique_id }}</div>
+            <h3>{{ mapping.technique_name }}</h3>
+          </div>
+          <span class="badge {{ mapping.severity }}">{{ mapping.severity }}</span>
+        </div>
+        <p>{{ mapping.description }}</p>
+        <p>
+          <strong>Tactics:</strong> {{ mapping.tactics | join(", ") }}<br>
+          <strong>Confidence:</strong> {{ (mapping.confidence * 100) | round | int }}%<br>
+          <strong>Rule:</strong> {{ mapping.rule_id }}
+        </p>
+        <details>
+          <summary>Matched evidence</summary>
+          <ul>
+          {% for evidence in mapping.evidence if evidence.matched %}
+            <li>
+              <code>{{ evidence.field }}</code>
+              {{ evidence.operator }}
+              <code>{{ evidence.expected }}</code>
+            </li>
+          {% endfor %}
+          </ul>
+        </details>
+      </section>
+      {% endfor %}
+    {% else %}
+      <p class="muted">No ATT&amp;CK mappings matched this event.</p>
+    {% endif %}
+  </article>
+  {% endfor %}
+
+  <footer>
+    ATT&amp;CK mappings require analyst review. This project is not affiliated with
+    or endorsed by MITRE.
+  </footer>
+</main>
+</body>
+</html>

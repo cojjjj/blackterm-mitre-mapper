@@ -1,0 +1,439 @@
+- id: BT-T1059-001
+  name: Encoded PowerShell
+  technique_id: T1059.001
+  technique_name: PowerShell
+  tactics: [execution]
+  severity: high
+  confidence: 0.90
+  description: Detects PowerShell execution with encoded command arguments.
+  platforms: [Windows]
+  match:
+    all:
+      - field: process.command_line
+        operator: contains
+        value: powershell
+        weight: 1.0
+      - field: process.command_line
+        operator: regex
+        value: '(?i)(?:^|\s)(?:-|/)(?:enc|encodedcommand)\b'
+        weight: 2.0
+  references:
+    - https://attack.mitre.org/techniques/T1059/001/
+  tags: [powershell, encoded-command]
+
+- id: BT-T1059-003
+  name: Windows Command Shell
+  technique_id: T1059.003
+  technique_name: Windows Command Shell
+  tactics: [execution]
+  severity: medium
+  confidence: 0.75
+  description: Detects use of cmd.exe or common command-shell execution syntax.
+  platforms: [Windows]
+  match:
+    any:
+      - field: process.name
+        operator: endswith
+        value: cmd.exe
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\bcmd(?:\.exe)?\s+/[ck]\b'
+  references:
+    - https://attack.mitre.org/techniques/T1059/003/
+
+- id: BT-T1059-004
+  name: Unix Shell
+  technique_id: T1059.004
+  technique_name: Unix Shell
+  tactics: [execution]
+  severity: medium
+  confidence: 0.72
+  description: Detects common Unix shell interpreters.
+  platforms: [Linux, macOS]
+  match:
+    any:
+      - field: process.name
+        operator: regex
+        value: '(?i)(?:^|/)(?:bash|sh|zsh|dash|ksh)$'
+      - field: process.command_line
+        operator: regex
+        value: '(?i)(?:^|\s)(?:/bin/)?(?:bash|sh|zsh)\s+-c\b'
+  references:
+    - https://attack.mitre.org/techniques/T1059/004/
+
+- id: BT-T1059-006
+  name: Python Execution
+  technique_id: T1059.006
+  technique_name: Python
+  tactics: [execution]
+  severity: medium
+  confidence: 0.70
+  description: Detects Python interpreter execution.
+  platforms: [Linux, macOS, Windows]
+  match:
+    any:
+      - field: process.name
+        operator: regex
+        value: '(?i)(?:^|/)(?:python|python2|python3)(?:\.exe)?$'
+      - field: process.command_line
+        operator: regex
+        value: '(?i)(?:^|\s)python(?:2|3)?(?:\.exe)?\s+(?:-c|-m)\b'
+  references:
+    - https://attack.mitre.org/techniques/T1059/006/
+
+- id: BT-T1105-CURL
+  name: Ingress Tool Transfer via Curl
+  technique_id: T1105
+  technique_name: Ingress Tool Transfer
+  tactics: [command-and-control]
+  severity: high
+  confidence: 0.82
+  description: Detects curl downloading content to a local file or piping it to an interpreter.
+  platforms: [Linux, macOS, Windows]
+  match:
+    all:
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\bcurl(?:\.exe)?\b'
+      - field: process.command_line
+        operator: regex
+        value: '(?i)(?:\s-o\s|\s--output\s|\|\s*(?:sh|bash|python|powershell)|https?://)'
+  references:
+    - https://attack.mitre.org/techniques/T1105/
+
+- id: BT-T1105-WGET
+  name: Ingress Tool Transfer via Wget
+  technique_id: T1105
+  technique_name: Ingress Tool Transfer
+  tactics: [command-and-control]
+  severity: high
+  confidence: 0.82
+  description: Detects wget retrieving remote content.
+  platforms: [Linux, macOS, Windows]
+  match:
+    all:
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\bwget(?:\.exe)?\b'
+      - field: process.command_line
+        operator: regex
+        value: '(?i)https?://'
+  references:
+    - https://attack.mitre.org/techniques/T1105/
+
+- id: BT-T1003-001
+  name: LSASS Memory Access
+  technique_id: T1003.001
+  technique_name: LSASS Memory
+  tactics: [credential-access]
+  severity: critical
+  confidence: 0.92
+  description: Detects command lines associated with dumping or accessing LSASS memory.
+  platforms: [Windows]
+  match:
+    any:
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\bprocdump(?:64)?(?:\.exe)?.*\blsass(?:\.exe)?\b'
+        weight: 2.0
+      - field: process.command_line
+        operator: regex
+        value: '(?i)comsvcs\.dll.*MiniDump.*lsass'
+        weight: 2.0
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\bsekurlsa::'
+        weight: 2.0
+  references:
+    - https://attack.mitre.org/techniques/T1003/001/
+
+- id: BT-T1053-005
+  name: Scheduled Task Creation
+  technique_id: T1053.005
+  technique_name: Scheduled Task/Job
+  tactics: [execution, persistence, privilege-escalation]
+  severity: high
+  confidence: 0.82
+  description: Detects Windows scheduled task creation.
+  platforms: [Windows]
+  match:
+    all:
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\bschtasks(?:\.exe)?\b'
+      - field: process.command_line
+        operator: regex
+        value: '(?i)(?:/create|/change)\b'
+  references:
+    - https://attack.mitre.org/techniques/T1053/005/
+
+- id: BT-T1547-001
+  name: Registry Run Keys
+  technique_id: T1547.001
+  technique_name: Registry Run Keys / Startup Folder
+  tactics: [persistence, privilege-escalation]
+  severity: high
+  confidence: 0.84
+  description: Detects modification of common Windows Run and RunOnce persistence keys.
+  platforms: [Windows]
+  match:
+    any:
+      - field: registry.path
+        operator: regex
+        value: '(?i)\\Software\\Microsoft\\Windows\\CurrentVersion\\Run(?:Once)?(?:\\|$)'
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\breg(?:\.exe)?\s+add\s+.*\\CurrentVersion\\Run(?:Once)?\b'
+  references:
+    - https://attack.mitre.org/techniques/T1547/001/
+
+- id: BT-T1021-001
+  name: Remote Desktop Protocol
+  technique_id: T1021.001
+  technique_name: Remote Desktop Protocol
+  tactics: [lateral-movement]
+  severity: medium
+  confidence: 0.78
+  description: Detects Remote Desktop client execution or network access to TCP 3389.
+  platforms: [Windows]
+  match:
+    any:
+      - field: process.name
+        operator: endswith
+        value: mstsc.exe
+      - field: destination.port
+        operator: equals
+        value: 3389
+  references:
+    - https://attack.mitre.org/techniques/T1021/001/
+
+- id: BT-T1021-004
+  name: SSH
+  technique_id: T1021.004
+  technique_name: SSH
+  tactics: [lateral-movement]
+  severity: medium
+  confidence: 0.72
+  description: Detects SSH client execution or network access to TCP 22.
+  platforms: [Linux, macOS]
+  match:
+    any:
+      - field: process.name
+        operator: regex
+        value: '(?i)(?:^|/)(?:ssh|scp|sftp)(?:\.exe)?$'
+      - field: destination.port
+        operator: equals
+        value: 22
+  references:
+    - https://attack.mitre.org/techniques/T1021/004/
+
+- id: BT-T1087-001
+  name: Local Account Discovery
+  technique_id: T1087.001
+  technique_name: Local Account
+  tactics: [discovery]
+  severity: low
+  confidence: 0.76
+  description: Detects commands that enumerate local users or accounts.
+  platforms: [Linux, macOS, Windows]
+  match:
+    any:
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\bnet(?:1)?\s+user\b'
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\b(?:cat|getent)\s+(?:passwd|.*\s+passwd)\b'
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\bdscl\s+\.\s+-list\s+/Users\b'
+  references:
+    - https://attack.mitre.org/techniques/T1087/001/
+
+- id: BT-T1033
+  name: System Owner User Discovery
+  technique_id: T1033
+  technique_name: System Owner/User Discovery
+  tactics: [discovery]
+  severity: low
+  confidence: 0.80
+  description: Detects commands used to identify the current user.
+  platforms: [Linux, macOS, Windows]
+  match:
+    any:
+      - field: process.command_line
+        operator: regex
+        value: '(?i)(?:^|\s)whoami(?:\.exe)?(?:\s|$)'
+      - field: process.command_line
+        operator: regex
+        value: '(?i)(?:^|\s)id(?:\s+-[a-z]+)?(?:\s|$)'
+  references:
+    - https://attack.mitre.org/techniques/T1033/
+
+- id: BT-T1016
+  name: System Network Configuration Discovery
+  technique_id: T1016
+  technique_name: System Network Configuration Discovery
+  tactics: [discovery]
+  severity: low
+  confidence: 0.75
+  description: Detects commands used to enumerate local network configuration.
+  platforms: [Linux, macOS, Windows]
+  match:
+    any:
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\bipconfig(?:\.exe)?\b'
+      - field: process.command_line
+        operator: regex
+        value: '(?i)(?:^|\s)(?:ifconfig|ip\s+(?:addr|route|link))\b'
+  references:
+    - https://attack.mitre.org/techniques/T1016/
+
+- id: BT-T1049
+  name: System Network Connections Discovery
+  technique_id: T1049
+  technique_name: System Network Connections Discovery
+  tactics: [discovery]
+  severity: low
+  confidence: 0.74
+  description: Detects commands used to inspect network connections.
+  platforms: [Linux, macOS, Windows]
+  match:
+    any:
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\bnetstat(?:\.exe)?\b'
+      - field: process.command_line
+        operator: regex
+        value: '(?i)(?:^|\s)ss\s+-[a-z]*[antulp]'
+  references:
+    - https://attack.mitre.org/techniques/T1049/
+
+- id: BT-T1562-001
+  name: Disable Security Tools
+  technique_id: T1562.001
+  technique_name: Impair Defenses
+  tactics: [defense-evasion]
+  severity: critical
+  confidence: 0.91
+  description: Detects commands that disable common security controls or antivirus protections.
+  platforms: [Windows, Linux, macOS]
+  match:
+    any:
+      - field: process.command_line
+        operator: regex
+        value: '(?i)Set-MpPreference.*-DisableRealtimeMonitoring\s+\$?true'
+        weight: 2.0
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\bsc(?:\.exe)?\s+(?:stop|config)\s+(?:WinDefend|Sense)\b'
+        weight: 2.0
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\bsystemctl\s+(?:stop|disable)\s+(?:auditd|falcon-sensor|wazuh-agent)\b'
+        weight: 2.0
+  references:
+    - https://attack.mitre.org/techniques/T1562/001/
+
+- id: BT-T1070-001
+  name: Clear Windows Event Logs
+  technique_id: T1070.001
+  technique_name: Clear Windows Event Logs
+  tactics: [defense-evasion]
+  severity: critical
+  confidence: 0.94
+  description: Detects commands used to clear Windows event logs.
+  platforms: [Windows]
+  match:
+    any:
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\bwevtutil(?:\.exe)?\s+(?:cl|clear-log)\b'
+        weight: 2.0
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\bClear-EventLog\b'
+        weight: 2.0
+  references:
+    - https://attack.mitre.org/techniques/T1070/001/
+
+- id: BT-T1218-011
+  name: Rundll32 Proxy Execution
+  technique_id: T1218.011
+  technique_name: Rundll32
+  tactics: [defense-evasion]
+  severity: high
+  confidence: 0.84
+  description: Detects suspicious rundll32 execution patterns.
+  platforms: [Windows]
+  match:
+    all:
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\brundll32(?:\.exe)?\b'
+      - field: process.command_line
+        operator: regex
+        value: '(?i)(?:javascript:|url\.dll|shell32\.dll|advpack\.dll|comsvcs\.dll|http)'
+  references:
+    - https://attack.mitre.org/techniques/T1218/011/
+
+- id: BT-T1218-005
+  name: MSHTA Proxy Execution
+  technique_id: T1218.005
+  technique_name: Mshta
+  tactics: [defense-evasion]
+  severity: high
+  confidence: 0.86
+  description: Detects mshta execution, including remote HTA content.
+  platforms: [Windows]
+  match:
+    any:
+      - field: process.name
+        operator: endswith
+        value: mshta.exe
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\bmshta(?:\.exe)?\b'
+  references:
+    - https://attack.mitre.org/techniques/T1218/005/
+
+- id: BT-T1047
+  name: Windows Management Instrumentation
+  technique_id: T1047
+  technique_name: Windows Management Instrumentation
+  tactics: [execution]
+  severity: high
+  confidence: 0.80
+  description: Detects command-line use of WMI tooling.
+  platforms: [Windows]
+  match:
+    any:
+      - field: process.name
+        operator: endswith
+        value: wmic.exe
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\b(?:wmic(?:\.exe)?|Invoke-WmiMethod|Get-WmiObject)\b'
+  references:
+    - https://attack.mitre.org/techniques/T1047/
+
+- id: BT-T1112
+  name: Modify Registry
+  technique_id: T1112
+  technique_name: Modify Registry
+  tactics: [defense-evasion]
+  severity: medium
+  confidence: 0.72
+  description: Detects command-line registry modification.
+  platforms: [Windows]
+  match:
+    all:
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\breg(?:\.exe)?\b'
+      - field: process.command_line
+        operator: regex
+        value: '(?i)\b(?:add|delete|copy|import|restore)\b'
+  references:
+    - https://attack.mitre.org/techniques/T1112/

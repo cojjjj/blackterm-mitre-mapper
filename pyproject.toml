@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "blackterm-mitre-mapper"
+version = "1.0.0"
+description = "BLACKTERM defensive investigation platform with MITRE ATT&CK mapping."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+  { name = "Tyler Deppa / BLACKTERM" }
+]
+dependencies = [
+  "typer>=0.12.0",
+  "rich>=13.7.0",
+  "pydantic>=2.7.0",
+  "PyYAML>=6.0.1",
+  "Jinja2>=3.1.4",
+  "httpx>=0.27.0",
+  "fastapi>=0.110.0",
+  "uvicorn>=0.29.0",
+  "python-multipart>=0.0.9"
+]
+
+[project.optional-dependencies]
+evtx = [
+  "python-evtx>=0.8.0"
+]
+all = [
+  "python-evtx>=0.8.0"
+]
+dev = [
+  "pytest>=8.0.0",
+  "ruff>=0.6.0",
+  "mypy>=1.10.0"
+]
+
+[project.scripts]
+mitre-mapper = "blackterm_mitre_mapper.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/blackterm_mitre_mapper"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

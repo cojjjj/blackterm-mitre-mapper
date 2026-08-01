@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BLACKTERM // Investigation Platform</title>
+  <link rel="stylesheet" href="/static/dashboard.css">
+</head>
+<body>
+<div class="scanline"></div>
+<aside class="sidebar">
+  <div class="brand-mark">BT</div>
+  <div class="brand-copy"><strong>BLACKTERM</strong><span>INVESTIGATION PLATFORM</span></div>
+  <nav>
+    <p class="nav-label">WORKSPACE</p>
+    <button class="nav-item active" data-view="platform-home"><span>⌂</span>Home</button>
+    <button class="nav-item" data-view="mitre-module"><span>⌁</span>MITRE Mapper</button>
+    <button class="nav-item module-link" data-module="tracegrid"><span>⌬</span>TRACEGRID <em>SOON</em></button>
+    <button class="nav-item module-link" data-module="sentinel"><span>◈</span>SENTINEL <em>LINK</em></button>
+    <button class="nav-item module-link" data-module="phishscan"><span>◇</span>PHISHSCAN <em>LINK</em></button>
+    <button class="nav-item module-link" data-module="iocforge"><span>◎</span>IOCForge <em>SOON</em></button>
+    <button class="nav-item module-link" data-module="ruleforge"><span>▦</span>RuleForge <em>SOON</em></button>
+    <p class="nav-label">MITRE WORKSPACE</p>
+    <button class="nav-item case-nav" data-target="overview"><span>◫</span>Overview</button>
+    <button class="nav-item case-nav" data-target="timeline"><span>↳</span>Timeline</button>
+    <button class="nav-item case-nav" data-target="attack"><span>▥</span>ATT&amp;CK</button>
+    <button class="nav-item case-nav" data-target="entities"><span>⌘</span>Entities</button>
+    <button class="nav-item case-nav" data-target="events"><span>≡</span>Events</button>
+    <button class="nav-item case-nav" data-target="cases"><span>▣</span>Cases</button>
+  </nav>
+  <div class="status"><i></i><span>CORE ONLINE · LOCAL MODE</span></div>
+</aside>
+<main>
+<header class="topbar">
+  <div><p class="eyebrow" id="top-kicker">UNIFIED DEFENSIVE OPERATIONS</p><h1 id="top-title">Investigation Platform</h1></div>
+  <div class="top-actions"><span id="case-id">NO ACTIVE CASE</span><button id="save-case" hidden>Save case</button><button id="new-case">New analysis</button></div>
+</header>
+
+<section id="platform-home" class="app-view active-view">
+  <section class="platform-hero panel">
+    <div><p class="eyebrow">BLACKTERM CONTROL PLANE</p><h2>One workspace. Every investigation.</h2><p>Launch defensive modules, preserve cases, and turn raw telemetry into analyst-ready context without sending data off the machine.</p></div>
+    <div class="hero-actions"><button class="primary-launch" data-view="mitre-module">Launch MITRE Mapper <span>→</span></button><button class="demo-launch" id="run-demo">Run demo investigation</button></div>
+  </section>
+  <section class="metric-strip">
+    <article class="metric"><span>Saved cases</span><strong id="home-case-count">{{ platform.case_count }}</strong><small>Persistent local workspace</small></article>
+    <article class="metric"><span>Events analyzed</span><strong id="home-event-count">{{ platform.event_count }}</strong><small>Across saved investigations</small></article>
+    <article class="metric"><span>ATT&amp;CK mappings</span><strong id="home-mapping-count">{{ platform.mapping_count }}</strong><small>Behavioral context generated</small></article>
+    <article class="metric danger"><span>Highest risk</span><strong id="home-highest-risk">{{ platform.highest_risk }}</strong><small>Maximum saved case score</small></article>
+  </section>
+  <section class="home-grid">
+    <article class="panel module-board"><div class="section-head"><div><p class="eyebrow">MODULE REGISTRY</p><h2>BLACKTERM tools</h2></div><span class="live-pill">1 ACTIVE</span></div><div id="module-grid" class="module-grid"></div></article>
+    <article class="panel activity-panel"><div class="section-head"><div><p class="eyebrow">LOCAL WORKSPACE</p><h2>Recent investigations</h2></div><button class="ghost" id="refresh-home">Refresh</button></div><div id="home-recent-cases" class="activity-list"></div></article>
+  </section>
+
+  <section class="operations-grid">
+    <article class="panel feed-panel"><div class="section-head"><div><p class="eyebrow">INVESTIGATION FEED</p><h2>Latest activity</h2></div><span class="live-pill">LOCAL</span></div><div id="investigation-feed" class="investigation-feed"></div></article>
+    <article class="panel heatmap-panel"><div class="section-head"><div><p class="eyebrow">ATT&amp;CK POSTURE</p><h2>Tactic heatmap</h2></div><span class="muted">Saved cases</span></div><div id="home-attack-heatmap" class="home-attack-heatmap"></div><div id="top-techniques" class="top-techniques"></div></article>
+  </section>
+  <section class="home-grid lower-grid">
+    <article class="panel"><div class="section-head"><div><p class="eyebrow">CASE POSTURE</p><h2>Severity distribution</h2></div></div><div id="severity-bars" class="severity-bars"></div></article>
+    <article class="panel system-panel"><div class="section-head"><div><p class="eyebrow">SYSTEM STATUS</p><h2>Platform health</h2></div><span class="live-pill">ONLINE</span></div><div class="system-grid"><div><span>Processing</span><strong>LOCAL</strong></div><div><span>ATT&amp;CK engine</span><strong>READY</strong></div><div><span>Case storage</span><strong>ENCRYPTION READY</strong></div><div><span>Network exposure</span><strong>127.0.0.1</strong></div></div></article>
+  </section>
+</section>
+
+<section id="mitre-module" class="app-view">
+  <section class="module-banner panel"><div><p class="eyebrow">ACTIVE MODULE · MITRE MAPPER</p><h2>Map telemetry to ATT&amp;CK</h2><p>Analyze command lines or JSON/JSONL/EVTX security events, then investigate techniques, entities, chronology, and evidence.</p></div><span class="module-status online">ENGINE ONLINE</span></section>
+  <section class="ingest panel" id="ingest-panel"><form id="command-form" class="command-form"><input id="command-input" name="command" placeholder="powershell.exe -enc SQBFAFgA" autocomplete="off"><button type="submit">Analyze command</button></form><div class="divider"><span>OR IMPORT TELEMETRY</span></div><label class="dropzone" id="dropzone"><input type="file" id="file-input" accept=".json,.jsonl,.evtx,application/json"><strong>Drop telemetry here</strong><span>JSON, JSONL, or EVTX · maximum 50 MB · remains local</span></label><p id="error" class="error" hidden></p></section>
+  <section class="panel recent-panel"><div class="section-head"><div><p class="eyebrow">MITRE WORKSPACE</p><h2>Recent cases</h2></div><button class="ghost" id="refresh-cases">Refresh</button></div><div id="recent-cases" class="case-grid">{% for case in recent_cases %}<button class="case-card" data-case-id="{{ case.case_id }}"><span class="severity {{ case.overall_severity }}">{{ case.overall_severity }}</span><strong>{{ case.title }}</strong><small>{{ case.event_count }} events · risk {{ case.max_risk }}/100</small></button>{% else %}<p class="muted empty-cases">No saved cases yet.</p>{% endfor %}</div></section>
+  <div id="workspace" hidden>
+    <section id="overview" class="workspace-section"><div class="hero-grid"><article class="panel threat-card"><div class="gauge" id="gauge"><div><strong id="risk-score">0</strong><span>/100</span><em id="risk-label">INFO</em></div></div><div><p class="eyebrow">OVERALL THREAT</p><h2 id="case-title">Investigation summary</h2><p id="summary"></p><div id="platforms" class="badges"></div></div></article><article class="panel stat-grid"><div><strong id="event-count">0</strong><span>Events</span></div><div><strong id="mapping-count">0</strong><span>Mappings</span></div><div><strong id="ioc-count">0</strong><span>Indicators</span></div><div><strong id="technique-count">0</strong><span>Techniques</span></div></article></div><div class="two-column"><article class="panel"><div class="section-head"><div><p class="eyebrow">ATT&amp;CK COVERAGE</p><h2>Tactic matrix</h2></div><button class="ghost" id="clear-filter" hidden>Clear filter</button></div><div id="tactic-matrix" class="tactic-matrix"></div></article><article class="panel"><div class="section-head"><div><p class="eyebrow">THREAT CHAIN</p><h2>Observed sequence</h2></div></div><div id="chain" class="chain"></div></article></div><article class="panel recommendations"><div class="section-head"><div><p class="eyebrow">ANALYST GUIDANCE</p><h2>Recommended next actions</h2></div></div><ol id="recommendations"></ol></article></section>
+    <section id="timeline" class="workspace-section panel"><div class="section-head"><div><p class="eyebrow">CHRONOLOGY</p><h2>Investigation timeline</h2></div></div><div id="timeline-list" class="timeline"></div></section>
+    <section id="attack" class="workspace-section panel"><div class="section-head"><div><p class="eyebrow">TECHNIQUE ANALYSIS</p><h2>ATT&amp;CK mappings</h2></div></div><div id="techniques" class="technique-grid"></div></section>
+    <section id="entities" class="workspace-section"><div class="two-column"><article class="panel"><div class="section-head"><div><p class="eyebrow">INDICATORS</p><h2>Extracted entities</h2></div></div><div id="ioc-groups"></div></article><article class="panel graph-panel"><div class="section-head"><div><p class="eyebrow">RELATIONSHIPS</p><h2>Draggable entity graph</h2></div><span class="muted">Drag nodes · click to inspect</span></div><canvas id="graph" width="760" height="500"></canvas><div id="node-inspector" class="node-inspector">Select a node to inspect it.</div></article></div></section>
+    <section id="events" class="workspace-section panel"><div class="section-head"><div><p class="eyebrow">RAW TELEMETRY</p><h2>Event explorer</h2></div><input id="event-filter" placeholder="Filter events…"></div><div id="event-list" class="event-explorer"></div></section>
+    <section id="cases" class="workspace-section panel"><div class="section-head"><div><p class="eyebrow">PERSISTENT WORKSPACE</p><h2>Saved investigations</h2></div><button class="ghost" id="refresh-cases-2">Refresh</button></div><div id="case-library" class="case-grid"></div></section>
+  </div>
+</section>
+
+<section id="module-placeholder" class="app-view"><article class="panel placeholder-card"><div class="placeholder-icon" id="placeholder-icon">⌬</div><p class="eyebrow">BLACKTERM MODULE</p><h2 id="placeholder-title">TRACEGRID</h2><p id="placeholder-copy"></p><div class="placeholder-roadmap"><span>Shared case database</span><span>Unified entity model</span><span>Common report engine</span><span>Module API</span></div><button class="primary-launch" data-view="platform-home">Return to platform</button></article></section>
+</main>
+<div id="case-modal" class="modal" hidden><form class="modal-card" id="case-form"><p class="eyebrow">SAVE INVESTIGATION</p><h2>Case details</h2><label>Case name<input id="case-name" maxlength="100" required></label><label>Analyst notes<textarea id="case-notes" rows="5" maxlength="5000"></textarea></label><div class="modal-actions"><button type="button" class="ghost" id="cancel-save">Cancel</button><button type="submit">Save locally</button></div></form></div>
+<div id="loader" class="loader" hidden><div></div><span>ANALYZING TELEMETRY</span></div>
+<script>window.BLACKTERM_PLATFORM={{ platform | tojson }};</script><script src="/static/dashboard.js"></script>
+</body></html>

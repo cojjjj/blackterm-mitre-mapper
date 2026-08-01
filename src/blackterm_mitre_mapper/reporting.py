@@ -6,6 +6,7 @@ from typing import Iterable
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+from .intelligence import build_report_context
 from .models import AnalysisResult
 
 
@@ -23,13 +24,8 @@ def write_html_report(results: list[AnalysisResult], destination: Path) -> Path:
         autoescape=select_autoescape(["html", "xml"]),
     )
     template = env.get_template("report.html.j2")
-    rendered = template.render(
-        title="BLACKTERM // MITRE MAPPER",
-        results=results,
-        event_count=len(results),
-        mapping_count=sum(len(item.mappings) for item in results),
-        max_risk=max((item.risk_score for item in results), default=0),
-    )
+    context = build_report_context(results)
+    rendered = template.render(title="BLACKTERM // MITRE MAPPER", results=results, **context)
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(rendered, encoding="utf-8")
     return destination

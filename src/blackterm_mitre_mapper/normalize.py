@@ -4,7 +4,6 @@ import json
 from collections.abc import Mapping, Sequence
 from typing import Any
 
-
 ALIASES = {
     "image": "process.name",
     "imagename": "process.name",

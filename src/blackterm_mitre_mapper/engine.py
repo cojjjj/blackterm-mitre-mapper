@@ -7,7 +7,6 @@ from .models import AnalysisResult, Evidence, MappingResult, MappingRule
 from .normalize import flatten_event, normalize_command
 from .operators import evaluate_condition
 
-
 SEVERITY_SCORE = {
     "informational": 5,
     "low": 20,

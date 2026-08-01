@@ -6,7 +6,6 @@ from typing import Any
 
 import httpx
 
-
 ENTERPRISE_STIX_URL = (
     "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/"
     "master/enterprise-attack/enterprise-attack.json"
@@ -19,12 +18,12 @@ class AttackCatalog:
         self.by_id = {item["external_id"]: item for item in techniques}
 
     @classmethod
-    def from_stix_file(cls, path: Path) -> "AttackCatalog":
+    def from_stix_file(cls, path: Path) -> AttackCatalog:
         data = json.loads(path.read_text(encoding="utf-8"))
         return cls(_extract_techniques(data))
 
     @classmethod
-    def bundled(cls) -> "AttackCatalog":
+    def bundled(cls) -> AttackCatalog:
         path = Path(__file__).parent / "data" / "techniques_seed.json"
         return cls(json.loads(path.read_text(encoding="utf-8")))
 

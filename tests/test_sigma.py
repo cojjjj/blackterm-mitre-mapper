@@ -3,7 +3,6 @@ from pathlib import Path
 from blackterm_mitre_mapper.engine import MitreMapper
 from blackterm_mitre_mapper.sigma import convert_sigma_file
 
-
 SAMPLE = Path(__file__).parents[1] / 'examples' / 'custom_rules' / 'sigma_encoded_powershell.yml'
 
 

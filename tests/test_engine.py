@@ -3,7 +3,6 @@ from pathlib import Path
 from blackterm_mitre_mapper.engine import MitreMapper
 from blackterm_mitre_mapper.loaders import load_rules
 
-
 RULES = Path(__file__).parents[1] / "src" / "blackterm_mitre_mapper" / "rules"
 
 

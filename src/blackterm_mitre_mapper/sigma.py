@@ -8,7 +8,6 @@ import yaml
 
 from .models import Condition, MappingRule, MatchExpression
 
-
 FIELD_ALIASES = {
     'image': 'process.name',
     'commandline': 'process.command_line',
